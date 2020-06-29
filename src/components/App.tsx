@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { connect } from 'react-redux'
-import { Todo, fetchTodos, deleteTodo} from '../actions'
+import { Todo, fetchTodos, deleteTodo } from '../actions'
 import { StoreState } from "../reducers";
+import { Button, Input } from '../styled'
 
 export interface AppProps {
     todos: Todo[];
@@ -20,22 +21,37 @@ const StyledDiv = styled.div`
     background: yellow;
     width: 500px;
 `
-    const App: React.FunctionComponent<AppProps> = ({todos, fetchTodos, deleteTodo}) => {
+
+const App: React.FC<AppProps> = ({ todos, fetchTodos, deleteTodo }) => {
     useEffect(() => {
         fetchTodos()
     }, [])
-    
+
     const handleDelete = (id: number) => {
         deleteTodo(id)
     }
     return <StyledDiv>
+        <div>
+            <Input
+                label="search"
+                type="text"
+                name="search"
+                placeholder="keyword"
+            />
+        </div>
+
         {todos.map(todo => (
-            <div key={todo.id} onClick={() => handleDelete(todo.id)}>{todo.id} - {todo.title}</div>
+            <div key={todo.id}
+                onClick={() => handleDelete(todo.id)}>
+                {todo.id} - {todo.title}
+                <Button onClick={() => handleDelete(todo.id)}>x</Button>
+                {/* <Checkbox checked={checkboxState} onChange={handleCheckboxChange}>Check me!</Checkbox> */}
+            </div>
         ))}
     </StyledDiv>
 }
 
-const mapStateToProps = ({todos}: StoreState): { todos: Todo[]} => {
+const mapStateToProps = ({ todos }: StoreState): { todos: Todo[] } => {
     return { todos }
 }
 
